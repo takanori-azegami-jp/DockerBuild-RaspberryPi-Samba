@@ -1,4 +1,4 @@
-# DockerBuild-RaspberryPi-Samba
+# docker-rpi-samba
 RaspberryPi(64bit)にDockerでSambaファイルサーバを構築
 
 ## 参考サイト

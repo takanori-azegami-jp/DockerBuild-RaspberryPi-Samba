@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  samba:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: samba
+    hostname: samba
+    tty: yes
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+    ports:
+      - "139:139"
+      - "445:445"
+    volumes:
+      - /samba/smb.conf:/etc/samba/smb.conf
+      - /samba/share:/samba/share
+volumes:
+  samba:
+    driver: local

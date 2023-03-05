@@ -14,8 +14,8 @@ services:
       - "139:139"
       - "445:445"
     volumes:
-      - /samba/smb.conf:/etc/samba/smb.conf
-      - /samba/share:/samba/share
+      - ./samba/smb.conf:/etc/samba/smb.conf
+      - ./samba/share:/samba/share
 volumes:
   samba:
     driver: local

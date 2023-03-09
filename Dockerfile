@@ -1,22 +1,23 @@
 FROM debian:11-slim
+
 RUN apt -y update && \
 		apt -y install samba
-RUN mkdir -p /samba/homes && \
-		chmod -R 0700 /samba/homes
-RUN mkdir -p /samba/share && \
-		chmod -R 0777 /samba/share
 
 COPY ./samba/smb.conf /etc/samba/smb.conf
 
 EXPOSE 139/tcp 445/tcp
 
-# ユーザ登録用シェル
-COPY ./user.list  ./user.list
-COPY ./user_add.sh ./user_add.sh
-RUN chmod 777 ./user_add.sh
-RUN sh ./user_add.sh
-RUN rm ./user_add.sh
+# ユーザ登録
+RUN adduser --disabled-password --gecos "" samba-user
+RUN echo "samba-user:samba-pass" | chpasswd
+RUN printf 'samba-pass\nsamba-pass\n' | pdbedit -a -t -u samba-user
 
-HEALTHCHECK CMD ["docker-healthcheck.sh"]
+RUN mkdir -p /samba/share && \
+		chown -R samba-user:samba-user /samba/share && \
+		chmod -R 777 /samba/share
 
-CMD [ "bash", "-c", "nmbd -D && smbd -F </dev/null" ]
+COPY docker-healthcheck.sh /docker-healthcheck.sh
+RUN chmod +x /docker-healthcheck.sh
+HEALTHCHECK CMD ["/docker-healthcheck.sh"]
+
+ENTRYPOINT [ "bash", "-c", "nmbd -D && smbd -F </dev/null" ]

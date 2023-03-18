@@ -6,12 +6,10 @@ RUN apt-get update && \
 
 COPY ./samba/smb.conf /etc/samba/smb.conf
 
-COPY ./samba_user.txt /samba_user.txt
-
 # ユーザ登録
-RUN cat /samba_user.txt | awk '{print "adduser --disabled-password --gecos \"\" ", $1}' | /bin/sh && \
-    cat /samba_user.txt | awk '{print "(echo ",$2,"; echo ",$2,") | pdbedit -a ",$1, "-t" }' | /bin/sh && \
-    rm /samba_user.txt
+RUN adduser --disabled-password --gecos "" samba-user
+RUN echo "samba-user:samba-pass" | chpasswd
+RUN printf 'samba-pass\nsamba-pass\n' | pdbedit -a -t -u samba-user
 
 RUN mkdir -p /samba/share && \
     chown -R samba-user:samba-user /samba/share && \
@@ -23,4 +21,4 @@ COPY docker-healthcheck.sh /docker-healthcheck.sh
 RUN chmod +x /docker-healthcheck.sh
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD exec /docker-healthcheck.sh
 
-CMD ["smbd", "--foreground", "--log-stdout"]
+CMD [ "bash", "-c", "nmbd -D && smbd -F </dev/null" ]

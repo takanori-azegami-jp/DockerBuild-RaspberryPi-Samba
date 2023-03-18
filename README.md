@@ -13,10 +13,13 @@ RaspberryPi(64bit)にDockerでWindows共有のSambaファイルサーバを構�
 - 139/tcp
 - 445/tcp
 
-## ログインユーザ
-`samba_user.txt`を変更する
+## ID、PASSの変更
+`Dockerfile`の`samba-user`と`samba-pass`を変更する
 ~~~
-samba-user smaba-pass
+# ユーザ登録
+RUN adduser --disabled-password --gecos "" samba-user
+RUN echo "samba-user:samba-pass" | chpasswd
+RUN printf 'samba-pass\nsamba-pass\n' | pdbedit -a -t -u samba-user
 ~~~
 
 ## コンテナ起動

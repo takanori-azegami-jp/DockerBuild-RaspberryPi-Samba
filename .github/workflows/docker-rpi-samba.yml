@@ -1,0 +1,22 @@
+name: docker-rpi-samba
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker Image
+      run: docker build -t my-samba-image .
+
+    - name: Run Samba Container
+      run: docker run -d --name samba-container my-samba-image
+
+    - name: Run Samba Health Check Test
+      run: docker run --rm --network container:samba-container appropriate/samba sh -c "testparm && smbclient -L localhost -U% -N"
+
+    - name: Stop Samba Container
+      run: docker stop samba-container

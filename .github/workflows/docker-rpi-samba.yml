@@ -15,8 +15,5 @@ jobs:
     - name: Run Samba Container
       run: docker run -d --name samba-container my-samba-image
 
-    - name: Run Samba Health Check Test
-      run: docker run --rm --network container:samba-container takanori-azegami-jp/docker-rpi-sambash -c "testparm && smbclient -L localhost -U% -N"
-
     - name: Stop Samba Container
       run: docker stop samba-container

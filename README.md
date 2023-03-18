@@ -2,10 +2,31 @@
 RaspberryPi(64bit)にDockerでWindows共有のSambaファイルサーバを構築
 
 ## 環境
+- kernel：Linux ホスト名 5.15.32-v8+ #1538 SMP PREEMPT Thu Mar 31 19:40:39 BST 2022 aarch64 GNU/Linux
+- サーバOS：Debian GNU/Linux 11 (bullseye)
+- クライアントOS：Windwos11 Pro 22H2
 
-## Dockerコマンド
+
+## 開放ポート
+- 137/udp
+- 138/udp
+- 139/tcp
+- 445/tcp
+
+## ログインユーザ
+`samba_user.txt`を変更する
+~~~
+samba-user smaba-pass
+~~~
+
+## コンテナ起動
+docker-compose.ymlを配置したフォルダに移動して実行
+~~~
+$ docker-compose up -d --build
+~~~
 
 ## Windowsからの接続方法
+省略
 
 ## 参考サイト
 - [Dockerでイメージ作成してsamba立ち上げる)](https://qiita.com/hasegit/items/3cf5dbd8951d8f236d54)

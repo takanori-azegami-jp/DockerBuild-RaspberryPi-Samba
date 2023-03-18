@@ -11,6 +11,8 @@ services:
     environment:
       TZ: Asia/Tokyo
     ports:
+      - "137:137"
+      - "138:138"
       - "139:139"
       - "445:445"
     volumes:
